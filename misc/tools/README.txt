@@ -34,8 +34,7 @@ kconfig-frontends
     make
     sudo make install
     
-  Note: If you get an error: "configure: error: can not find gperf", install gperf: 
-  sudo apt-get install gperf*
+  Note: See the topic "kconfig-mconf Path Issues" discussed below for solutions to common build issues.
 
   It is a good idea to add '--enable-mconf' on the 'configure' command line.
   The kconfig-frontends make will generate many programs, but the NuttX
@@ -111,6 +110,47 @@ kconfig-macos.patch
     ./configure --disable-shared --enable-static --disable-gconf --disable-qconf --disable-nconf --disable-utils
     make
     make install
+
+kconfig-mconf Path Issues
+-------------------------
+
+Some people have experienced this problem after successfully building and installing
+the kconfig-frontends tools:
+
+  kconfig-mconf: error while loading shared libraries: libkconfig-parser-3.8.0.so: cannot open shared object file: No such file or directory
+  make: *** [menuconfig] Error 127
+
+There two known solutions to this:
+
+1) Add the directory where the kconfig-frontends libraries were installed to the file /etc//ld.so.conf (probably /usr/local/lib). To do this, create a file "local.conf" in the directory /etc/ld.so.conf.d/ with the entry /usr/local/lib/. Then run
+`sudo ldconfig -v`.
+
+2) Specify the LD_RUN_PATH environment when building the kconfig-frontends
+   tools like:
+
+     ./configure --enable-mconf
+     LD_RUN_PATH=/usr/local/lib
+     make
+     make install
+
+3) Build the kconfig-frontends tools using only static libraries:
+
+     ./configure --enable-mconf --disable-shared --enable-static
+
+I have also been told that some people see this error until they re-boot, then it
+just goes away.  I would try that before anything else.
+
+gperf
+-----
+
+  "I am getting an error when configuring the kconfig-frontends-3.12.0.0 package.
+   Using command
+
+    ./configure --enable-mconf
+
+  "It says it 'configure: error: can not find gperf'"
+
+   If you see this, make sure that the gperf package is installed.
 
 kconfig-frontends for Windows
 -----------------------------
