@@ -32,7 +32,10 @@ kconfig-frontends
     cd kconfig-frontends
     ./configure --enable-mconf
     make
-    make install
+    sudo make install
+    
+  Note: If you get an error: "configure: error: can not find gperf", install gperf: 
+  sudo apt-get install gperf*
 
   It is a good idea to add '--enable-mconf' on the 'configure' command line.
   The kconfig-frontends make will generate many programs, but the NuttX
